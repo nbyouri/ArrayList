@@ -30,12 +30,8 @@ void *toArray() {
 	return array;
 }
 
-// XXX memory leak
-char *toString(struct entry *en) {
-	char *string = NULL;
-	string = growArray(string, BUFSIZ, sizeof(char));
-	snprintf(string, BUFSIZ, "%02u -> %s", en->id, en->name);
-	return string;
+void toString(struct entry *en) {
+	printf("%02u -> %s\n", en->id, en->name);
 }
 
 void cleanList() {
@@ -201,8 +197,7 @@ void swap(struct entry *first, struct entry *second) {
 		first = set(first, second);
 		second = set(second, temp);
 
-		free(temp);
-		temp = NULL;
+		temp = cleanPtr((char **)temp, NULL);
 	}
 }
 
@@ -230,7 +225,6 @@ void colorize(const char *col, char *str) {
 	snprintf(temp, BUFSIZ, "%s%s%s", col ? col : GRN, str, NOR);
 	strlcpy(str, temp, BUFSIZ);
 
-	free(temp);
-	temp = NULL;
+	temp = cleanPtr((char **)temp, NULL);
 }
 

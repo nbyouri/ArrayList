@@ -28,10 +28,11 @@ struct entry {
 TAILQ_HEAD(tailhead, entry) head;
 
 // Traverse the tail queue in forward direction
+#define initList()	TAILQ_INIT(&head)
 #define foreach(x)	TAILQ_FOREACH(x, &head, entries)
 #define foreach_rev(x)	TAILQ_FOREACH_REVERSE(x, &head, tailhead, entries)
 
-char *toString(struct entry *);
+void toString(struct entry *);
 void add(struct entry *);
 void addBefore(struct entry *, struct entry *);
 void addAfter(struct entry *, struct entry *);

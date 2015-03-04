@@ -9,7 +9,8 @@ int main(void) {
 	struct dirent       *ep;
 
 	// initialize list
-	TAILQ_INIT(&head);
+	initList();
+	unsigned int i = 0;
 
 	// get a file listing from PATH
 	if ((dp = opendir(PATH)) == NULL) {
@@ -18,7 +19,8 @@ int main(void) {
 	} else {
 		while ((ep = readdir(dp)) != NULL) {
 			if ((ep->d_name[0] != '.')) {
-				add(new(arc4random() % 100, ep->d_name));
+				//add(new(arc4random() % 100, ep->d_name));
+				add(new(i++, ep->d_name));
 			}
 		}
 		if (closedir(dp) == -1) {
@@ -32,11 +34,11 @@ int main(void) {
 	swapNext(get(9));
 	swapNext(get(9));
 	swapPrev(get(9));
-	struct entry *first = get(40);
-	struct entry *second = get(2);
-	swap(first, second);
+#endif
+	swap(get(29), get(2));
 	swapNext(get(9));
 
+#if 0
 	// replace next/prev entries
 	struct entry e;
 	e.name = growArray(e.name, BUFSIZ, sizeof(char));
@@ -61,19 +63,19 @@ int main(void) {
 
 	// get first / last entry
 #if 0
-	printf("%s\n", toString(getFirst()));
-	printf("%s\n", toString(getLast()));
+	toString(getFirst());
+	toString(getLast());
 #endif
 
 #if 0
 	// get an entry like an array
 	struct entry *item = get(5);
-	printf("5 > %s\n", toString(get(5)));
+	toString(get(5));
 	printf("%s\n", "renaming entry 5 name to \"arst\"");
 	if (setName("arst", item) == -1) {
 		perror("Failed to set name\n");
 	} else {
-		printf("%s\n", toString(item));
+		toString(item))
 	}
 #endif
 
@@ -88,16 +90,17 @@ int main(void) {
 #endif
 
 	// bubble sort items
+#if 0
 	sort(cmpId);
 	sort(cmpName);
+#endif
 
 	// print contents
 	foreach (np) {
-		printf("%s\n", toString(np));
+		toString(np);
 	}
 
-	// free allocated memory for each entry
-	// and remove them.
+	// free list items
 	cleanList();
 
 	// should be empty by now, still check
