@@ -15,7 +15,8 @@ void sort(int (*cmp)(const void *, const void *)) {
 	}
 }
 
-void *toArray(char **array) {
+void *toArray() {
+	char **array = NULL;
 	unsigned int i = 0;
 	array = growArray(array, getSize(), sizeof(char *));
 	if (array == NULL) {
@@ -29,6 +30,7 @@ void *toArray(char **array) {
 	return array;
 }
 
+// XXX memory leak
 char *toString(struct entry *en) {
 	char *string = NULL;
 	string = growArray(string, BUFSIZ, sizeof(char));
@@ -36,10 +38,10 @@ char *toString(struct entry *en) {
 	return string;
 }
 
-void freeList() {
+void cleanList() {
 	foreach (np) {
-		free(np->name);
-		np->name = NULL;
+		np->name = cleanPtr((char **)np->name, NULL);
+		assert(np->name == NULL);
 		rm(np);
 	}
 }

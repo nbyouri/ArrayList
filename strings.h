@@ -1,13 +1,7 @@
-#include <errno.h>
-#include <limits.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <stdbool.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <limits.h>
 
 void *cleanPtr(char **, unsigned int *);
 char **stringToArray(char *, char *);

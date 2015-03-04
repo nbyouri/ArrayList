@@ -1,0 +1,1 @@
+- only assert if DEBUG is enabled.

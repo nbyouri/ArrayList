@@ -58,5 +58,5 @@ void swapNext(struct entry *);
 void *toArray(char **);
 bool isEmpty(void);
 void sort(int (*)(const void *, const void *));
-void freeList(void);
+void cleanList(void);
 void colorize(const char *, char *);
