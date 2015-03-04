@@ -1,6 +1,6 @@
 CC=	clang
 CFLAGS=	-Weverything -Wno-padded
-SRC=	list-draft.c
+SRC=	examples.c list.c strings.c
 TARGET=	test-list
 
 all:
