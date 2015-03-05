@@ -82,8 +82,6 @@ Certaines fonctions dépendent du contenu de l'objet:
 
 ## Programme d'exemple
 
-> Ce programme d'exemple fait usage de ma librairie `strings`
-
 - entry.h
 
 ```c
@@ -128,7 +126,7 @@ object *new(unsigned int id,char *name);
 ```c
 #include <assert.h>
 #include "list.h"
-#include "strings.h"
+#include "tools.h"
 
 /* Fonctions à implémenter */
 
@@ -222,12 +220,12 @@ void cleanList() {
 }
 ```
 
-- main.c
+- examples.c
 
 ```c
 #include <dirent.h>
 #include "list.h"
-#include "strings.h"
+#include "tools.h"
 
 /* Dossier à regarder */
 #define PATH "/Users/youri/Downloads"
@@ -288,11 +286,10 @@ int main(void) {
 
 Compilez avec
 
-- `cc list.c strings.c main.c -o test`
+- `cc list.c tools.c examples.c -o test`
 
 ## Détails d'implémentation
 
-- List fait usage de ma liste 'strings'.
 - List est une implémentation haut niveau des listes chaînées en C.
 - Elle utiliser les TAILQ de BSD  (voir queue.h)
 

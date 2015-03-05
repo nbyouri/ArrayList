@@ -1,6 +1,6 @@
 CC=	gcc
 CFLAGS=	-Wall -DDEBUG
-SRC=	examples.c list.c strings.c entry.c
+SRC=	examples.c list.c tools.c entry.c
 TARGET=	test-list
 
 all:

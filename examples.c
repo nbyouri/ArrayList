@@ -1,6 +1,6 @@
 #include <dirent.h>
 #include "list.h"
-#include "strings.h"
+#include "tools.h"
 
 #define PATH "/Users/youri/Downloads"
 

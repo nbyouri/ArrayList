@@ -1,5 +1,5 @@
 #include "list.h"
-#include "strings.h"
+#include "tools.h"
 
 #ifdef DEBUG
 #include <assert.h>
@@ -130,7 +130,9 @@ void swapNext(object *base) {
 }
 
 void swapPrev(object *base) {
+#ifdef DEBUG
 	assert(base != NULL);
+#endif
 	object *prev = getPrev(base);
 	if (prev != NULL) {
 		swap(base, prev);
