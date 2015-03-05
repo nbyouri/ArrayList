@@ -1,5 +1,5 @@
-CC=	clang
-CFLAGS=	-Wall
+CC=	gcc
+CFLAGS=	-Wall -DDEBUG
 SRC=	examples.c list.c strings.c
 TARGET=	test-list
 

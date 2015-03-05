@@ -111,5 +111,7 @@ int main(void) {
 	// free entry pointer
 	np = cleanPtr((char **)np, NULL);
 
-	return EXIT_SUCCESS;
+	isClean();
+
+	return 0;
 }

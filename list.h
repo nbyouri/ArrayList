@@ -1,12 +1,8 @@
-#include <assert.h>
-#include <dirent.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#include <sys/types.h>
+
 #include "queue.h"
 
+/* colors for use with colorize() */
 #define GRN "\033[22;32m"
 #define NOR "\033[00;0m"
 
@@ -17,12 +13,12 @@
  *   entries, a set of pointers to previous
  *   and next elements.
  */
-struct entry {
-	unsigned int id;
-	char *name;
-	/* pointer to previous and next entries in the tail queue */
-	TAILQ_ENTRY(entry) entries;
-} *np;
+#define pointers(x)	TAILQ_ENTRY(x)
+
+/* user defined entry structure */
+#include "entry.h"
+
+struct entry *np;
 
 // tail queue head
 TAILQ_HEAD(tailhead, entry) head;
@@ -57,7 +53,8 @@ void swap(struct entry *, struct entry *);
 void swapPrev(struct entry *);
 void swapNext(struct entry *);
 void *toArray(char **);
-bool isEmpty(void);
+int isEmpty(void);
+void isClean(void);
 void sort(int (*)(const void *, const void *));
 void cleanList(void);
 void colorize(const char *, char *);

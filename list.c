@@ -1,6 +1,10 @@
 #include "list.h"
 #include "strings.h"
 
+#ifdef DEBUG
+#include <assert.h>
+#endif
+
 void sort(int (*cmp)(const void *, const void *)) {
 	unsigned int i = 0;
 	for (i = 0; i < getSize(); i++) {
@@ -177,7 +181,7 @@ size_t getSize(void) {
 	return size;
 }
 
-bool isEmpty(void) {
+int isEmpty(void) {
 	return TAILQ_EMPTY(&head);
 }
 
@@ -228,3 +232,9 @@ void colorize(const char *col, char *str) {
 	temp = cleanPtr((char **)temp, NULL);
 }
 
+void isClean(void) {
+	foreach (np) {
+		assert(np != NULL);
+		assert(np->name != NULL);
+	}
+}
