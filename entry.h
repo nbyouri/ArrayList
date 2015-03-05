@@ -10,7 +10,6 @@
  *
  */
 
-
 struct entry {
 	unsigned int	id;
 	char		*name;
@@ -19,6 +18,9 @@ struct entry {
 };
 
 typedef	struct entry object;
+
+/* objet libre utilitaire */
+object *np;
 
 /*
  *

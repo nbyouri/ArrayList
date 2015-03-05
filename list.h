@@ -8,9 +8,6 @@
 /* user defined entry structure */
 #include "entry.h"
 
-/* token entry */
-object *np;
-
 /* tail queue head */
 TAILQ_HEAD(tailhead, entry) head;
 
