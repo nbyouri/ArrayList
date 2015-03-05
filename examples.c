@@ -31,8 +31,8 @@ int main(void) {
 	} else {
 		while ((ep = readdir(dp)) != NULL) {
 			if ((ep->d_name[0] != '.')) {
-				//add(new(arc4random() % 100, ep->d_name));
-				add(new(i++, ep->d_name));
+				np = new(i++, ep->d_name);
+				add(np);
 			}
 		}
 		if (closedir(dp) == -1) {
