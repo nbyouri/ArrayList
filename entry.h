@@ -15,6 +15,6 @@ struct entry {
 	unsigned int	id;
 	char		*name;
 	/* ne pas éditer */
-	pointers(entry)	entries;
+	pointers	entries;
 };
 

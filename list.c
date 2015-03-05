@@ -9,7 +9,7 @@ void sort(int (*cmp)(const void *, const void *)) {
 	unsigned int i = 0;
 	for (i = 0; i < getSize(); i++) {
 		foreach(np) {
-			struct entry *next = getNext(np);
+			object *next = getNext(np);
 			if (next != NULL) {
 				if (cmp(np, next) > 0) {
 					swap(np, next);
@@ -34,7 +34,7 @@ void *toArray() {
 	return array;
 }
 
-void toString(struct entry *en) {
+void toString(object *en) {
 	printf("%02u -> %s\n", en->id, en->name);
 }
 
@@ -46,33 +46,33 @@ void cleanList() {
 	}
 }
 
-void add(struct entry *en) {
+void add(object *en) {
 	assert(en != NULL);
 	TAILQ_INSERT_TAIL(&head, en, entries);
 }
 
-void addOnTop(struct entry *en) {
+void addOnTop(object *en) {
 	assert(en != NULL);
 	TAILQ_INSERT_HEAD(&head, en, entries);
 }
 
-void addBefore(struct entry *base, struct entry *new) {
+void addBefore(object *base, object *new) {
 	assert(base != NULL && new != NULL);
 	TAILQ_INSERT_BEFORE(base, new, entries);
 }
 
-void addAfter(struct entry *base, struct entry *new) {
+void addAfter(object *base, object *new) {
 	assert(base != NULL && new != NULL);
 	TAILQ_INSERT_AFTER(&head, base, new, entries);
 }
 
-void rm(struct entry *en) {
+void rm(object *en) {
 	assert(en != NULL);
 	TAILQ_REMOVE(&head, en, entries);
 }
 
-struct entry *new(unsigned int id, char *name) {
-	struct entry *en = NULL;
+object *new(unsigned int id, char *name) {
+	object *en = NULL;
 	en = growArray(en, 1, sizeof(*en));
 	en->id = id;
 	en->name = growArray(en->name, BUFSIZ, sizeof(*(en->name)));
@@ -82,7 +82,7 @@ struct entry *new(unsigned int id, char *name) {
 	return en;
 }
 
-struct entry *get(unsigned int i) {
+object *get(unsigned int i) {
 	foreach (np) {
 		if (np->id == i) {
 			return np;
@@ -91,29 +91,29 @@ struct entry *get(unsigned int i) {
 	return NULL;
 }
 
-struct entry *getFirst(void) {
+object *getFirst(void) {
 	return TAILQ_FIRST(&head);
 }
 
-struct entry *getLast(void) {
+object *getLast(void) {
 	return TAILQ_LAST(&head, tailhead);
 }
 
-struct entry *getPrev(struct entry *en) {
+object *getPrev(object *en) {
 	assert(en != NULL);
-	struct entry *prev;
+	object *prev;
 	prev =  TAILQ_PREV(en, tailhead, entries);
 	return prev;
 }
 
-struct entry *getNext(struct entry *en) {
+object *getNext(object *en) {
 	assert(en != NULL);
-	struct entry *next;
+	object *next;
 	next = TAILQ_NEXT(en, entries);
 	return next;
 }
 
-struct entry *set(struct entry *base, struct entry *en) {
+object *set(object *base, object *en) {
 	assert(en != NULL);
 
 	if (base == NULL) {
@@ -130,39 +130,32 @@ struct entry *set(struct entry *base, struct entry *en) {
 	return base;
 }
 
-void setPrev(struct entry *base, struct entry *en) {
+void setPrev(object *base, object *en) {
 	assert(base != NULL && en != NULL);
-	struct entry *prev = getPrev(base);
+	object *prev = getPrev(base);
 	if (prev != NULL) {
 		set(prev, en);
 	}
 }
 
-void setNext(struct entry *base, struct entry *en) {
+void setNext(object *base, object *en) {
 	assert(base != NULL && en != NULL);
-	struct entry *next = getNext(base);
+	object *next = getNext(base);
 	if (next != NULL) {
 		set(next, en);
 	}
 }
 
-char *getName(struct entry *en) {
+char *getName(object *en) {
 	return (en->name);
 }
 
-unsigned int getId(struct entry *en) {
+unsigned int getId(object *en) {
 	assert(en != NULL);
 	return en->id;
 }
 
-int cmpId(const void *a, const void *b) {
-	struct entry *en1 = (struct entry *)a;
-	struct entry *en2 = (struct entry *)b;
-	assert(en1 != NULL && en2 != NULL);
-	return ((int)en2->id - (int)en1->id);
-}
-
-ssize_t setName(char *name, struct entry *en) {
+ssize_t setName(char *name, object *en) {
 	assert(en != NULL && name != NULL);
 	if (en->name == NULL) {
 		en->name = growArray(en->name, BUFSIZ, sizeof(char));
@@ -185,17 +178,10 @@ int isEmpty(void) {
 	return TAILQ_EMPTY(&head);
 }
 
-int cmpName(const void *a, const void *b) {
-	struct entry *en1 = (struct entry *)a;
-	struct entry *en2 = (struct entry *)b;
-	assert(en1 != NULL && en2 != NULL);
-	return (strcasecmp(en1->name, en2->name));
-}
-
-void swap(struct entry *first, struct entry *second) {
+void swap(object *first, object *second) {
 	assert(first != NULL && second != NULL);
 	if (first->id != second->id) {
-		struct entry *temp = NULL;
+		object *temp = NULL;
 		temp = set(temp, first);
 
 		first = set(first, second);
@@ -205,17 +191,17 @@ void swap(struct entry *first, struct entry *second) {
 	}
 }
 
-void swapNext(struct entry *base) {
+void swapNext(object *base) {
 	assert(base != NULL);
-	struct entry *next = getNext(base);
+	object *next = getNext(base);
 	if (next != NULL) {
 		swap(base, next);
 	}
 }
 
-void swapPrev(struct entry *base) {
+void swapPrev(object *base) {
 	assert(base != NULL);
-	struct entry *prev = getPrev(base);
+	object *prev = getPrev(base);
 	if (prev != NULL) {
 		swap(base, prev);
 	}

@@ -4,6 +4,18 @@
 
 #define PATH "/Users/youri/Downloads"
 
+int cmpName(const void *a, const void *b) {
+	object *en1 = (object *)a;
+	object *en2 = (object *)b;
+	return (strcasecmp(en1->name, en2->name));
+}
+
+int cmpId(const void *a, const void *b) {
+	object *en1 = (object *)a;
+	object *en2 = (object *)b;
+	return ((int)en2->id - (int)en1->id);
+}
+
 int main(void) {
 	DIR                 *dp;
 	struct dirent       *ep;
@@ -40,7 +52,7 @@ int main(void) {
 
 #if 0
 	// replace next/prev entries
-	struct entry e;
+	object e;
 	e.name = growArray(e.name, BUFSIZ, sizeof(char));
 	strlcpy(e.name, "youri", BUFSIZ);
 	e.id = 99;
@@ -50,7 +62,7 @@ int main(void) {
 
 
 	// insert before / after
-	struct entry b, d;
+	object b, d;
 	b.name = growArray(b.name, BUFSIZ, sizeof(char));
 	d.name = growArray(d.name, BUFSIZ, sizeof(char));
 	d.id = 11;
@@ -69,7 +81,7 @@ int main(void) {
 
 #if 0
 	// get an entry like an array
-	struct entry *item = get(5);
+	object *item = get(5);
 	toString(get(5));
 	printf("%s\n", "renaming entry 5 name to \"arst\"");
 	if (setName("arst", item) == -1) {

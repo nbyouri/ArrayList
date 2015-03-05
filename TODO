@@ -1,1 +1,2 @@
 - only assert if DEBUG is enabled.
+- put cmp* in example.c
