@@ -4,18 +4,6 @@
 
 #define PATH "/Users/youri/Downloads"
 
-int cmpName(const void *a, const void *b) {
-	object *en1 = (object *)a;
-	object *en2 = (object *)b;
-	return (strcasecmp(en1->name, en2->name));
-}
-
-int cmpId(const void *a, const void *b) {
-	object *en1 = (object *)a;
-	object *en2 = (object *)b;
-	return ((int)en2->id - (int)en1->id);
-}
-
 int main(void) {
 	DIR                 *dp;
 	struct dirent       *ep;

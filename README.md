@@ -1,11 +1,8 @@
 # List, une librairie de listes chaînées haut niveau en C
 
-- List est une implémentation haut niveau des listes chaînées en C.
-- Elle utiliser les TAILQ de BSD  (voir queue.h)
-
 ## Utilisation
 
-- Définir la structure de l'objet `object` dans entry.h, par exemple:
+- Définir la structure de l'objet `object` dans `entry.h`, par exemple:
 
 	```c
 	struct entry {
@@ -26,6 +23,8 @@
 
 fonction | description
 ---------:|:-----------
+*foreach*(np) {} | boucle while itèrant de la tête vers la queue
+*foreach_rev*(np) {} | boucle while itèrant de la queue vers la tête
 *new*(unsigned int id, ...) | constructeur d'objet, doit être défini par l'utilisateur. `new()` 	alloue la mémoire nécessaire pour un objet.
 *set*(object *obj, object *new) | remplace l'objet `obj` avec un autre objet `new`.
 *add*(object *obj)` | ajouter un objet au bout de la liste.
@@ -52,14 +51,20 @@ fonction | description
 *toString*() | affiche l'objet à l'écran de manière lisible pour l'utilisateur.
 *sort*() | prend en paramètre une fonction de com paraison d'objets, celle ci doit être définie comme suit: `int cmp(const void *, const void *);`
 	
-### Fonctions à modifier
-- Le constructeur `new` pour créer les objets.
+### / ! \ Fonctions à modifier dans `entry.c` / ! \
+
+Certaines fonctions dépendent du contenu de l'objet: 
+
+- Le constructeur `new()` pour créer les objets.
+- La fonction `set()` pour allouer et initialiser un objet dans la liste.
 - Les fonctions `cleanList()` et `isClean()` pour nettoyer les eventuels pointeurs ajoutés dans la définition de l'objet par l'utilisateur.
 - `toArrray()`, pour créer un tableau dynamique d'un élément à partir des objets de la liste.
 - `toString()`, pour afficher à l'écran des champs de la structure.
+- getters et setters éventuels, voir programme d'exemple.
 
-### Fonctions à ajouter
-- Les fonctions de tris pour sort(), par exemple pour trier sur un champs `char *name`:
+### Fonctions à ajouter dans `entry.c`
+- Optionnellement, ajouter des fonctions de tris pour sort().
+	Par exemple, pour trier sur un champs `char *name`:
 
 	```c
 	 int cmpName(const void *a, const void *b) {
@@ -74,3 +79,223 @@ fonction | description
 ## Important
 
 - Ne pas oublier de désallouer l'entrée "token" qui permet d'itérer dans la liste et les autres éventuels objets générés par le constructeur `new()`. 	
+
+## Programme d'exemple
+
+> Ce programme d'exemple fait usage de ma librairie `strings`
+
+- entry.h
+
+```c
+/*
+ *
+ * Définition de l'objet de la liste chaînée.
+ *
+ * Vous pouvez ajouter des champs au choix, tant que la structure est bien
+ * nommée entry et qu'elle contient les pointeurs.
+ *
+ * Ne pas oublier d'implémenter les fonctions spécifiques à vos champs
+ * pour utiliser avec les fonctions de comparaison pour sort().
+ *
+ */
+
+
+struct entry {
+	unsigned int	id;
+	char		*name;
+	/* obligatoire */
+	pointers	entries;
+};
+
+/* obligatoire */
+typedef	struct entry object;
+
+void cleanList();
+void toString(object *en);
+void *toArray();
+void isClean(void);
+ssize_t setName(char *name,object *en);
+int cmpId(const void *a,const void *b);
+int cmpName(const void *a,const void *b);
+char *getName(object *en);
+object *set(object *base,object *en);
+object *new(unsigned int id,char *name);
+
+```
+
+- entry.c
+
+```c
+#include <assert.h>
+#include "list.h"
+#include "strings.h"
+
+/* Fonctions à implémenter */
+
+object *new(unsigned int id, char *name) {
+	object *en = NULL;
+	en = growArray(en, 1, sizeof(*en));
+	en->id = id;
+	en->name = growArray(en->name, BUFSIZ, sizeof(*(en->name)));
+	if (name != NULL) {
+		strlcpy(en->name, name, BUFSIZ);
+	}
+	return en;
+}
+
+object *set(object *base, object *en) {
+	assert(en != NULL);
+	
+	if (base == NULL) {
+		base = new(0, "(null)");
+	}
+
+	if (en->name != NULL) {
+		strlcpy(base->name, en->name, BUFSIZ);
+	} else {
+		base->name = NULL;
+	}
+
+	base->id = en->id;
+	return base;
+}
+
+char *getName(object *en) {
+	return (en->name);
+}
+
+int cmpName(const void *a, const void *b) {
+	object *en1 = (object *)a;
+	object *en2 = (object *)b;
+	return (strcasecmp(en1->name, en2->name));
+}
+
+int cmpId(const void *a, const void *b) {
+	object *en1 = (object *)a;
+	object *en2 = (object *)b;
+	return ((int)en2->id - (int)en1->id);
+}
+
+ssize_t setName(char *name, object *en) {
+	assert(en != NULL && name != NULL);
+	if (en->name == NULL) {
+		en->name = growArray(en->name, BUFSIZ, sizeof(char));
+	}
+	if (strlen(name) > 0) {
+		return (ssize_t)strlcpy(en->name, name, BUFSIZ);
+	}
+	return -1;
+}
+
+void isClean(void) {
+	foreach (np) {
+		assert(np != NULL);
+		assert(np->name != NULL);
+	}
+}
+
+void *toArray() {
+	char **array = NULL;
+	unsigned int i = 0;
+	array = growArray(array, getSize(), sizeof(char *));
+	if (array == NULL) {
+		perror("*array == NULL");
+	}
+	foreach (np) {
+		array[i] = growArray(array[i], BUFSIZ, sizeof(char));
+		strlcpy(array[i], np->name, BUFSIZ);
+		i++;
+	}
+	return array;
+}
+
+void toString(object *en) {
+	printf("%02u -> %s\n", en->id, en->name);
+}
+
+void cleanList() {
+	foreach (np) {
+		np->name = cleanPtr((char **)np->name, NULL);
+		assert(np->name == NULL);
+		rm(np);
+	}
+}
+```
+
+- main.c
+
+```c
+#include <dirent.h>
+#include "list.h"
+#include "strings.h"
+
+/* Dossier à regarder */
+#define PATH "/Users/youri/Downloads"
+
+int main(void) {
+	DIR                 *dp;
+	struct dirent       *ep;
+
+	/* initialisation de la liste */
+	initList();
+
+	/* ouvrir PATH directory */
+	if ((dp = opendir(PATH)) == NULL) {
+		perror("Failed to opendir");
+		return -1;
+	} else {
+		/* récupérer un listing de dossiers depuis PATH */
+		while ((ep = readdir(dp)) != NULL) {
+			if ((ep->d_name[0] != '.')) {
+				/* add directory in list */
+				unsigned int id = random();
+				np = new(id, ep->d_name);
+				add(np);
+			}
+		}
+		/* fermeture du dossier */
+		if (closedir(dp) == -1) {
+			perror("Failed to close dir pointer");
+			return -1;
+		}
+	}
+	
+	/* échange de deux objets basé sur leur index */
+	swap(get(29), get(2));
+	
+	/* affichage du premier objet */
+	toString(getFirst());
+	
+	/* tri sur les noms */
+	sort(cmpName);
+
+
+	/* affichage du contenu */
+	foreach (np) {
+		toString(np);
+	}
+
+	/* vidage & nettoyage de la liste */
+	cleanList();
+
+	/* désallocation de l'objet 'token' */
+	np = cleanPtr((char **)np, NULL);
+	
+	/* cassos */
+	return 0;
+}
+```
+
+Compilez avec
+
+- `cc list.c strings.c main.c -o test`
+
+## Détails d'implémentation
+
+- List fait usage de ma liste 'strings'.
+- List est une implémentation haut niveau des listes chaînées en C.
+- Elle utiliser les TAILQ de BSD  (voir queue.h)
+
+## Auteur
+
+Youri Mouton, 5 Mars 2015.

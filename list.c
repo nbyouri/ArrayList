@@ -19,33 +19,6 @@ void sort(int (*cmp)(const void *, const void *)) {
 	}
 }
 
-void *toArray() {
-	char **array = NULL;
-	unsigned int i = 0;
-	array = growArray(array, getSize(), sizeof(char *));
-	if (array == NULL) {
-		perror("*array == NULL");
-	}
-	foreach (np) {
-		array[i] = growArray(array[i], BUFSIZ, sizeof(char));
-		strlcpy(array[i], np->name, BUFSIZ);
-		i++;
-	}
-	return array;
-}
-
-void toString(object *en) {
-	printf("%02u -> %s\n", en->id, en->name);
-}
-
-void cleanList() {
-	foreach (np) {
-		np->name = cleanPtr((char **)np->name, NULL);
-		assert(np->name == NULL);
-		rm(np);
-	}
-}
-
 void add(object *en) {
 	assert(en != NULL);
 	TAILQ_INSERT_TAIL(&head, en, entries);
@@ -69,17 +42,6 @@ void addAfter(object *base, object *new) {
 void rm(object *en) {
 	assert(en != NULL);
 	TAILQ_REMOVE(&head, en, entries);
-}
-
-object *new(unsigned int id, char *name) {
-	object *en = NULL;
-	en = growArray(en, 1, sizeof(*en));
-	en->id = id;
-	en->name = growArray(en->name, BUFSIZ, sizeof(*(en->name)));
-	if (name != NULL) {
-		strlcpy(en->name, name, BUFSIZ);
-	}
-	return en;
 }
 
 object *get(unsigned int i) {
@@ -113,23 +75,6 @@ object *getNext(object *en) {
 	return next;
 }
 
-object *set(object *base, object *en) {
-	assert(en != NULL);
-
-	if (base == NULL) {
-		base = new(0, "(null)");
-	}
-
-	if (en->name != NULL) {
-		strlcpy(base->name, en->name, BUFSIZ);
-	} else {
-		base->name = NULL;
-	}
-
-	base->id = en->id;
-	return base;
-}
-
 void setPrev(object *base, object *en) {
 	assert(base != NULL && en != NULL);
 	object *prev = getPrev(base);
@@ -146,24 +91,9 @@ void setNext(object *base, object *en) {
 	}
 }
 
-char *getName(object *en) {
-	return (en->name);
-}
-
 unsigned int getId(object *en) {
 	assert(en != NULL);
 	return en->id;
-}
-
-ssize_t setName(char *name, object *en) {
-	assert(en != NULL && name != NULL);
-	if (en->name == NULL) {
-		en->name = growArray(en->name, BUFSIZ, sizeof(char));
-	}
-	if (strlen(name) > 0) {
-		return (ssize_t)strlcpy(en->name, name, BUFSIZ);
-	}
-	return -1;
 }
 
 size_t getSize(void) {
@@ -207,20 +137,3 @@ void swapPrev(object *base) {
 	}
 }
 
-void colorize(const char *col, char *str) {
-	assert(str != NULL);
-	char *temp = NULL;
-	temp = growArray(temp, BUFSIZ, sizeof(char));
-
-	snprintf(temp, BUFSIZ, "%s%s%s", col ? col : GRN, str, NOR);
-	strlcpy(str, temp, BUFSIZ);
-
-	temp = cleanPtr((char **)temp, NULL);
-}
-
-void isClean(void) {
-	foreach (np) {
-		assert(np != NULL);
-		assert(np->name != NULL);
-	}
-}

@@ -2,18 +2,11 @@
 
 #include "queue.h"
 
-/* colors for use with colorize() */
-#define GRN "\033[22;32m"
-#define NOR "\033[00;0m"
-
 /* pointers is a tailq entry */
 #define pointers	TAILQ_ENTRY(entry)
 
 /* user defined entry structure */
 #include "entry.h"
-
-/* object is an entry structure */
-typedef struct entry	object;
 
 /* token entry */
 object *np;
@@ -39,7 +32,6 @@ void addOnTop(object *);
 
 void rm(object *);
 
-object *new(unsigned int id, char *name);
 object *get(unsigned int);
 object *getFirst(void);
 object *getLast(void);
@@ -64,5 +56,3 @@ void isClean(void);
 void cleanList(void);
 
 void sort(int (*)(const void *, const void *));
-
-void colorize(const char *, char *);

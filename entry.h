@@ -18,3 +18,22 @@ struct entry {
 	pointers	entries;
 };
 
+typedef	struct entry object;
+
+/*
+ *
+ * Fonction à implémenter / modifier qui dépendent
+ * du contenu de l'objet.
+ *
+ *
+ */
+void cleanList();
+void toString(object *en);
+void *toArray();
+void isClean(void);
+ssize_t setName(char *name,object *en);
+int cmpId(const void *a,const void *b);
+int cmpName(const void *a,const void *b);
+char *getName(object *en);
+object *set(object *base,object *en);
+object *new(unsigned int id,char *name);
