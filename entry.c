@@ -20,7 +20,9 @@ object *new(unsigned int id, char *name) {
 }
 
 object *set(object *base, object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 
 	if (base == NULL) {
 		base = new(0, "(null)");
@@ -53,7 +55,9 @@ int cmpId(const void *a, const void *b) {
 }
 
 ssize_t setName(char *name, object *en) {
+#ifdef DEBUG
 	assert(en != NULL && name != NULL);
+#endif
 	en->name = strndup(name, BUFSIZ);
 	return -1;
 }
@@ -91,7 +95,9 @@ void toString(object *en) {
 void cleanList() {
 	foreach (np) {
 		np->name = cleanPtr((char **)np->name, NULL);
+#ifdef DEBUG
 		assert(np->name == NULL);
+#endif
 		rm(np);
 	}
 }

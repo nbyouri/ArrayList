@@ -20,27 +20,37 @@ void sort(int (*cmp)(const void *, const void *)) {
 }
 
 void add(object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 	TAILQ_INSERT_TAIL(&head, en, entries);
 }
 
 void addOnTop(object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 	TAILQ_INSERT_HEAD(&head, en, entries);
 }
 
 void addBefore(object *base, object *new) {
+#ifdef DEBUG
 	assert(base != NULL && new != NULL);
+#endif
 	TAILQ_INSERT_BEFORE(base, new, entries);
 }
 
 void addAfter(object *base, object *new) {
+#ifdef DEBUG
 	assert(base != NULL && new != NULL);
+#endif
 	TAILQ_INSERT_AFTER(&head, base, new, entries);
 }
 
 void rm(object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 	TAILQ_REMOVE(&head, en, entries);
 }
 
@@ -62,21 +72,27 @@ object *getLast(void) {
 }
 
 object *getPrev(object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 	object *prev;
 	prev =  TAILQ_PREV(en, tailhead, entries);
 	return prev;
 }
 
 object *getNext(object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 	object *next;
 	next = TAILQ_NEXT(en, entries);
 	return next;
 }
 
 void setPrev(object *base, object *en) {
+#ifdef DEBUG
 	assert(base != NULL && en != NULL);
+#endif
 	object *prev = getPrev(base);
 	if (prev != NULL) {
 		set(prev, en);
@@ -84,7 +100,9 @@ void setPrev(object *base, object *en) {
 }
 
 void setNext(object *base, object *en) {
+#ifdef DEBUG
 	assert(base != NULL && en != NULL);
+#endif
 	object *next = getNext(base);
 	if (next != NULL) {
 		set(next, en);
@@ -92,7 +110,9 @@ void setNext(object *base, object *en) {
 }
 
 unsigned int getId(object *en) {
+#ifdef DEBUG
 	assert(en != NULL);
+#endif
 	return en->id;
 }
 
@@ -109,7 +129,9 @@ int isEmpty(void) {
 }
 
 void swap(object *first, object *second) {
+#ifdef DEBUG
 	assert(first != NULL && second != NULL);
+#endif
 	if (first->id != second->id) {
 		object *temp = NULL;
 		temp = set(temp, first);
@@ -122,7 +144,9 @@ void swap(object *first, object *second) {
 }
 
 void swapNext(object *base) {
+#ifdef DEBUG
 	assert(base != NULL);
+#endif
 	object *next = getNext(base);
 	if (next != NULL) {
 		swap(base, next);

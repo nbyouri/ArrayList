@@ -1,2 +1,0 @@
-- only assert if DEBUG is enabled.
-- strdup fail?
