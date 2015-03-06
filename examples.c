@@ -81,13 +81,11 @@ int main(void) {
 
 
 	// convert linkedlist to array
-#if 0
 	char **array = NULL;
 	array = toArray(array);
 	unsigned int count = (unsigned int)getSize();
 	dumpArray(array, count);
 	cleanPtr(array, &count);
-#endif
 
 	// bubble sort items
 #if 0

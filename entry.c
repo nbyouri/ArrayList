@@ -15,10 +15,7 @@ object *new(unsigned int id, char *name) {
 	object *en = NULL;
 	en = growArray(en, 1, sizeof(*en));
 	en->id = id;
-	en->name = growArray(en->name, BUFSIZ, sizeof(*(en->name)));
-	if (name != NULL) {
-		strlcpy(en->name, name, BUFSIZ);
-	}
+	en->name = strndup(name, BUFSIZ);
 	return en;
 }
 
@@ -57,12 +54,7 @@ int cmpId(const void *a, const void *b) {
 
 ssize_t setName(char *name, object *en) {
 	assert(en != NULL && name != NULL);
-	if (en->name == NULL) {
-		en->name = growArray(en->name, BUFSIZ, sizeof(char));
-	}
-	if (strlen(name) > 0) {
-		return (ssize_t)strlcpy(en->name, name, BUFSIZ);
-	}
+	en->name = strndup(name, BUFSIZ);
 	return -1;
 }
 
@@ -76,13 +68,17 @@ void isClean(void) {
 void *toArray() {
 	char **array = NULL;
 	unsigned int i = 0;
-	array = growArray(array, getSize(), sizeof(char *));
+	size_t listSize = getSize();
+	if (listSize == 0) {
+		return NULL;
+	}
+	array = growArray(array, listSize, sizeof(char *));
 	if (array == NULL) {
-		perror("*array == NULL");
+		perror("array == NULL");
+		return NULL;
 	}
 	foreach (np) {
-		array[i] = growArray(array[i], BUFSIZ, sizeof(char));
-		strlcpy(array[i], np->name, BUFSIZ);
+		array[i] = strndup(np->name, BUFSIZ);
 		i++;
 	}
 	return array;

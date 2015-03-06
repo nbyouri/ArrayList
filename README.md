@@ -126,7 +126,7 @@ object *new(unsigned int id,char *name);
 ```c
 #include <assert.h>
 #include "list.h"
-#include "tools.h"
+#include "strings.h"
 
 /* Fonctions à implémenter */
 
@@ -200,8 +200,7 @@ void *toArray() {
 		perror("*array == NULL");
 	}
 	foreach (np) {
-		array[i] = growArray(array[i], BUFSIZ, sizeof(char));
-		strlcpy(array[i], np->name, BUFSIZ);
+		array[i] = strdup(np->name, BUFSIZ);
 		i++;
 	}
 	return array;
@@ -220,12 +219,12 @@ void cleanList() {
 }
 ```
 
-- examples.c
+- main.c
 
 ```c
 #include <dirent.h>
 #include "list.h"
-#include "tools.h"
+#include "strings.h"
 
 /* Dossier à regarder */
 #define PATH "/Users/youri/Downloads"
@@ -286,10 +285,11 @@ int main(void) {
 
 Compilez avec
 
-- `cc list.c tools.c examples.c -o test`
+- `cc list.c strings.c main.c -o test`
 
 ## Détails d'implémentation
 
+- List fait usage de ma liste 'strings'.
 - List est une implémentation haut niveau des listes chaînées en C.
 - Elle utiliser les TAILQ de BSD  (voir queue.h)
 

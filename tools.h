@@ -5,3 +5,4 @@
 
 void *cleanPtr(char **, unsigned int *);
 void *growArray(void *, size_t, size_t);
+void dumpArray(char **, size_t);

@@ -1,2 +1,2 @@
 - only assert if DEBUG is enabled.
-- put strings in its own library
+- strdup fail?
