@@ -176,12 +176,8 @@ int cmpId(const void *a, const void *b) {
 
 ssize_t setName(char *name, object *en) {
 	assert(en != NULL && name != NULL);
-	if (en->name == NULL) {
-		en->name = growArray(en->name, BUFSIZ, sizeof(char));
-	}
-	if (strlen(name) > 0) {
-		return (ssize_t)strlcpy(en->name, name, BUFSIZ);
-	}
+	strdup(np->name, name);
+	assert(np->name != NULL);
 	return -1;
 }
 
@@ -201,6 +197,7 @@ void *toArray() {
 	}
 	foreach (np) {
 		array[i] = strdup(np->name, BUFSIZ);
+		assert(array[i] != NULL);
 		i++;
 	}
 	return array;

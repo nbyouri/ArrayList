@@ -16,6 +16,9 @@ object *new(unsigned int id, char *name) {
 	en = growArray(en, 1, sizeof(*en));
 	en->id = id;
 	en->name = strndup(name, BUFSIZ);
+#ifdef DEBUG
+	assert(en->name != NULL);
+#endif
 	return en;
 }
 
@@ -28,11 +31,10 @@ object *set(object *base, object *en) {
 		base = new(0, "(null)");
 	}
 
-	if (en->name != NULL) {
-		strlcpy(base->name, en->name, BUFSIZ);
-	} else {
-		base->name = NULL;
-	}
+	base->name = strndup(en->name, BUFSIZ);
+#ifdef DEBUG
+	assert(base->name != NULL);
+#endif
 
 	base->id = en->id;
 	return base;
@@ -59,6 +61,9 @@ ssize_t setName(char *name, object *en) {
 	assert(en != NULL && name != NULL);
 #endif
 	en->name = strndup(name, BUFSIZ);
+#ifdef DEBUG
+	assert(en->name != NULL);
+#endif
 	return -1;
 }
 
@@ -83,6 +88,9 @@ void *toArray() {
 	}
 	foreach (np) {
 		array[i] = strndup(np->name, BUFSIZ);
+#ifdef DEBUG
+		assert(array[i] != NULL);
+#endif
 		i++;
 	}
 	return array;
