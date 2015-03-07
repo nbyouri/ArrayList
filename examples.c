@@ -86,7 +86,7 @@ int main(void) {
 	unsigned int count = (unsigned int)getSize();
 	count--;
 	dumpArray(array, count);
-	cleanPtr(array, &count);
+	cleanArray(array, &count);
 
 	// bubble sort items
 #if 0
@@ -108,7 +108,7 @@ int main(void) {
 	}
 
 	// free entry pointer
-	np = cleanPtr((char **)np, NULL);
+	np = cleanArray((char **)np, NULL);
 
 	isClean();
 

@@ -3,30 +3,33 @@
 /*
  * Safely allocate memory for arrays
  */
-void *growArray(void *ptr, size_t nelem, size_t size) {
-	void *tempPtr;
-	size_t totalSize = nelem * size;
+int growArray(void *ptr, size_t num, size_t size) {
+	int saved_errno, result;
+	void *optr;
+	void *nptr;
 
-	if (totalSize == 0) {
-		printf("Trying to allocate 0\n");
-		return NULL;
+	memcpy(&optr, ptr, sizeof(ptr));
+	saved_errno = errno;
+	if (num == 0 || size == 0) {
+		free(optr);
+		nptr = NULL;
+		memcpy(ptr, &nptr, sizeof(ptr));
+		errno = saved_errno;
+		return 0;
 	}
-	if (SIZE_T_MAX / nelem < size) {
-		printf("Trying to allocate too much\n");
-		return NULL;
+	if ((num >= 65535 || size >= 65535) && num > SIZE_MAX / size) {
+		return EOVERFLOW;
 	}
-	// if the pointer is NULL or if we're trying
-	// to grow a simple string, malloc first.
-	if ((ptr == NULL) || (size == sizeof(char))) {
-		tempPtr = malloc(totalSize);
+
+	nptr = realloc(optr, num * size);
+	if (nptr == NULL) {
+		result = errno;
 	} else {
-		tempPtr = realloc(ptr, totalSize);
+		result = 0;
+		memcpy(ptr, &nptr, sizeof(ptr));
 	}
-	if (tempPtr == NULL) {
-		printf("Failed to reallocate %zu bytes.\n", totalSize);
-	}
-
-	return tempPtr;
+	errno = saved_errno;
+	return result;
 }
 
 /*
@@ -34,7 +37,7 @@ void *growArray(void *ptr, size_t nelem, size_t size) {
  * can be used with char * as well,
  * just cast it. ex. cleanPtr((char **)str, NULL)
  */
-void *cleanPtr(char **ptr, unsigned int *count) {
+void *cleanArray(char **ptr, unsigned int *count) {
 	if ((count != NULL) && (*count > 0)) {
 		unsigned int i;
 		for (i = 0; i < *count; i++) {

@@ -145,7 +145,7 @@ void swap(object *first, object *second) {
 		first = set(first, second);
 		second = set(second, temp);
 
-		temp = cleanPtr((char **)temp, NULL);
+		temp = cleanArray((char **)temp, NULL);
 	}
 }
 

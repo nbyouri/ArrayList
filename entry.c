@@ -13,7 +13,9 @@
  */
 object *new(unsigned int id, char *name) {
 	object *en = NULL;
-	en = growArray(en, 1, sizeof(*en));
+	if (growArray(&en, 1, sizeof(*en)) != 0) {
+		perror("failed to grow array");
+	}
 	en->id = id;
 	en->name = strndup(name, BUFSIZ);
 #ifdef DEBUG
@@ -81,7 +83,9 @@ void *toArray() {
 	if (listSize == 0) {
 		return NULL;
 	}
-	array = growArray(array, listSize, sizeof(char *));
+	if (growArray(&array, listSize, sizeof(char *)) != 0) {
+		perror("failed to grow array");
+	}
 	if (array == NULL) {
 		perror("array == NULL");
 		return NULL;
@@ -102,7 +106,7 @@ void toString(object *en) {
 
 void cleanList() {
 	foreach (np) {
-		np->name = cleanPtr((char **)np->name, NULL);
+		np->name = cleanArray((char **)np->name, NULL);
 #ifdef DEBUG
 		assert(np->name == NULL);
 #endif
