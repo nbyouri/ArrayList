@@ -280,7 +280,7 @@ int main(void) {
 }
 ```
 
-Compilez avec
+Compilez l'exemple avec
 
 - `cc list.c entry.c tools.c main.c -o test`
 
