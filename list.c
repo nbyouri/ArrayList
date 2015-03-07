@@ -7,7 +7,13 @@
 
 void sort(int (*cmp)(const void *, const void *)) {
 	unsigned int i = 0;
-	for (i = 0; i < getSize(); i++) {
+	size_t size = getSize();
+
+	if (size == 0) {
+		return;
+	}
+
+	for (i = 0; i < size; i++) {
 		foreach(np) {
 			object *next = getNext(np);
 			if (next != NULL) {

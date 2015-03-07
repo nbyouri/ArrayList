@@ -84,6 +84,7 @@ int main(void) {
 	char **array = NULL;
 	array = toArray(array);
 	unsigned int count = (unsigned int)getSize();
+	count--;
 	dumpArray(array, count);
 	cleanPtr(array, &count);
 

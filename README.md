@@ -282,7 +282,7 @@ int main(void) {
 
 Compilez avec
 
-- `cc list.c strings.c main.c -o test`
+- `cc list.c entry.c tools.c main.c -o test`
 
 ## Détails d'implémentation
 
