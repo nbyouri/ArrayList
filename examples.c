@@ -46,24 +46,34 @@ int main(void) {
 	newlist = malloc(sizeof(*list));
 	initList(newlist);
 
-	newlist->obj = getFirst(list);
+	newlist->obj = get(list, 12);
 	add(newlist, newlist->obj);
 
+	newlist->obj = get(list, 20);
+	toString(newlist->obj);
+	//add(newlist, newlist->obj);
+
+	//newlist->obj = get(list, 23);
+	//add(newlist, newlist->obj);
+
+	printf("\n\n\nlist2\n");
 	foreach (newlist) {
 		toString(newlist->obj);
 	}
 
-	cleanList(newlist);
-
-	// free list items
-	cleanList(list);
-
 	// should be empty by now, still check
-	if (!isEmpty(list)) {
-		perror("ll not empty\n");
+	if (isEmpty(list) || isEmpty(newlist)) {
+		perror("ll empty\n");
+		return -1;
+	} else {
+
+		cleanList(newlist);
+
+		// free list items
+		cleanList(list);
+
+		printf("lists cleaned, you can't do anything with them now\n");
+
 	}
-
-	printf("list->head: %p\nnewlist->head: %p\n", list->head, newlist->head);
-
-	return isClean(list);
+	return 0;
 }

@@ -29,14 +29,14 @@ void add(ArrayList *list, object *obj) {
 #ifdef DEBUG
 	assert(obj != NULL);
 #endif
-	TAILQ_INSERT_TAIL(&(list->head), obj, entries);
+	TAILQ_INSERT_TAIL(list->head, obj, entries);
 }
 
 void addOnTop(ArrayList *list, object *obj) {
 #ifdef DEBUG
 	assert(obj != NULL);
 #endif
-	TAILQ_INSERT_HEAD(&(list->head), obj, entries);
+	TAILQ_INSERT_HEAD(list->head, obj, entries);
 }
 
 void addBefore(ArrayList *list, object *base, object *new) {
@@ -50,14 +50,14 @@ void addAfter(ArrayList *list, object *base, object *new) {
 #ifdef DEBUG
 	assert(base != NULL && new != NULL);
 #endif
-	TAILQ_INSERT_AFTER(&(list->head), base, new, entries);
+	TAILQ_INSERT_AFTER(list->head, base, new, entries);
 }
 
 void rm(ArrayList *list, object *obj) {
 #ifdef DEBUG
 	assert(obj != NULL);
 #endif
-	TAILQ_REMOVE(&(list->head), obj, entries);
+	TAILQ_REMOVE(list->head, obj, entries);
 }
 
 object *get(ArrayList *list, unsigned int i) {
@@ -70,11 +70,11 @@ object *get(ArrayList *list, unsigned int i) {
 }
 
 object *getFirst(ArrayList *list) {
-	return TAILQ_FIRST(&(list->head));
+	return TAILQ_FIRST(list->head);
 }
 
 object *getLast(ArrayList *list) {
-	return TAILQ_LAST(&(list->head), thead);
+	return TAILQ_LAST(list->head, thead);
 }
 
 object *getPrev(ArrayList *list, object *obj) {
@@ -131,7 +131,7 @@ unsigned int getSize(ArrayList *list) {
 }
 
 int isEmpty(ArrayList *list) {
-	return TAILQ_EMPTY(&(list->head));
+	return TAILQ_EMPTY(list->head);
 }
 
 void swap(object *first, object *second) {

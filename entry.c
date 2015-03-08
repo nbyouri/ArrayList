@@ -68,18 +68,6 @@ void setName(char *name, object *en) {
 #endif
 }
 
-int isClean(ArrayList *list) {
-	foreach (list) {
-		if (list->obj != NULL) {
-			if (list->obj->name != NULL) {
-				printf("entry %u not freed\n", list->obj->id);
-				return -1;
-			}
-		}
-	}
-	return 0;
-}
-
 void *toArray(ArrayList *list) {
 	char **array = NULL;
 	unsigned int i = 0;
@@ -105,6 +93,13 @@ void *toArray(ArrayList *list) {
 }
 
 void toString(object *obj) {
+	if (obj == NULL) {
+		printf("object is null\n");
+		return;
+	}
+	if (obj->name == NULL) {
+		obj->name = NULL;
+	}
 	printf("%02u -> %s\n", obj->id, obj->name);
 }
 
@@ -116,5 +111,7 @@ void cleanList(ArrayList *list) {
 #endif
 		rm(list, list->obj);
 	}
+	free(list->head);
+	list->head = NULL;
 }
 

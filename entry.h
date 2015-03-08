@@ -20,7 +20,7 @@ struct entry {
 typedef	struct entry object;
 
 typedef struct {
-	TAILQ_HEAD(thead, entry) head;
+	TAILQ_HEAD(thead, entry) *head;
 	object *obj;
 } ArrayList;
 
@@ -40,8 +40,6 @@ void toString(object *);
 void cleanList(ArrayList *);
 
 void *toArray(ArrayList *);
-
-int isClean(ArrayList *);
 
 void setName(char *, object *);
 
