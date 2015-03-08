@@ -19,8 +19,10 @@ struct entry {
 
 typedef	struct entry object;
 
-/* objet libre utilitaire */
-object *np;
+typedef struct {
+	TAILQ_HEAD(thead, entry) head;
+	object *obj;
+} ArrayList;
 
 /*
  *
@@ -29,13 +31,22 @@ object *np;
  *
  *
  */
-void cleanList();
-void toString(object *en);
-void *toArray();
-void isClean(void);
-ssize_t setName(char *name,object *en);
-int cmpId(const void *a,const void *b);
-int cmpName(const void *a,const void *b);
-char *getName(object *en);
-object *set(object *base,object *en);
-object *new(unsigned int id,char *name);
+object *set(object *,object *);
+
+object *new(unsigned int id,char *);
+
+void toString(object *);
+
+void cleanList(ArrayList *);
+
+void *toArray(ArrayList *);
+
+int isClean(ArrayList *);
+
+void setName(char *, object *);
+
+char *getName(object *);
+
+int cmpId(const void *,const void *);
+int cmpName(const void *,const void *);
+

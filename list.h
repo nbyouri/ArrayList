@@ -8,48 +8,43 @@
 /* user defined entry structure */
 #include "entry.h"
 
-/* tail queue head */
-TAILQ_HEAD(tailhead, entry) head;
-
 /* initialize the list */
-#define initList()	TAILQ_INIT(&head)
+#define initList(x)	TAILQ_INIT(&(x->head))
 
 /* Traverse the tail queue in forward direction */
-#define foreach(x)	TAILQ_FOREACH(x, &head, entries)
+#define foreach(x)	TAILQ_FOREACH(x->obj, &(x->head), entries)
 
 /* Traverse the tail queue in forward direction */
-#define foreach_rev(x)	TAILQ_FOREACH_REVERSE(x, &head, tailhead, entries)
+#define foreach_rev(x)	TAILQ_FOREACH_REVERSE(x->obj, &(x->head), thead, entries)
 
 void toString(object *);
+void add(ArrayList *, object *);
+void addOnTop(ArrayList *, object *);
+void rm(ArrayList *, object *);
+void swapPrev(ArrayList *, object *);
+void swapNext(ArrayList *, object *);
 
-void add(object *);
-void addBefore(object *, object *);
-void addAfter(object *, object *);
-void addOnTop(object *);
+void addBefore(ArrayList *, object *, object *);
+void addAfter(ArrayList *, object *, object *);
+void setPrev(ArrayList *,  object *, object *);
+void setNext(ArrayList *,  object *, object *);
+void swap(object *, object *);
 
-void rm(object *);
+object  *get(ArrayList *, unsigned int);
 
-object *get(unsigned int);
-object *getFirst(void);
-object *getLast(void);
-object *getPrev(object *);
-object *getNext(object *);
-object *set(object *, object *);
+object  *getFirst(ArrayList *);
+object  *getLast(ArrayList *);
 
-void setPrev(object *, object *);
-void setNext(object *, object *);
+object  *getPrev(ArrayList *, object *);
+object  *getNext(ArrayList *, object *);
 
 unsigned int getId(object *);
-size_t getSize(void);
+unsigned int getSize(ArrayList *);
 
-void swap(object *, object *);
-void swapPrev(object *);
-void swapNext(object *);
+void *toArray(ArrayList *);
 
-void *toArray(char **);
+int isEmpty(ArrayList *);
 
-int isEmpty(void);
-void isClean(void);
-void cleanList(void);
+void cleanList(ArrayList *);
 
-void sort(int (*)(const void *, const void *));
+void sort(ArrayList *, int (*)(const void *, const void *));

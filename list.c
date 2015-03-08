@@ -5,133 +5,133 @@
 #include <assert.h>
 #endif
 
-void sort(int (*cmp)(const void *, const void *)) {
+void sort(ArrayList *list, int (*cmp)(const void *, const void *)) {
 	unsigned int i = 0;
-	size_t size = getSize();
+	unsigned int size = getSize(list);
 
 	if (size == 0) {
 		return;
 	}
 
 	for (i = 0; i < size; i++) {
-		foreach(np) {
-			object *next = getNext(np);
+		foreach(list) {
+			object *next = getNext(list, list->obj);
 			if (next != NULL) {
-				if (cmp(np, next) > 0) {
-					swap(np, next);
+				if (cmp(list->obj, next) > 0) {
+					swap(list->obj, next);
 				}
 			}
 		}
 	}
 }
 
-void add(object *en) {
+void add(ArrayList *list, object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
-	TAILQ_INSERT_TAIL(&head, en, entries);
+	TAILQ_INSERT_TAIL(&(list->head), obj, entries);
 }
 
-void addOnTop(object *en) {
+void addOnTop(ArrayList *list, object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
-	TAILQ_INSERT_HEAD(&head, en, entries);
+	TAILQ_INSERT_HEAD(&(list->head), obj, entries);
 }
 
-void addBefore(object *base, object *new) {
+void addBefore(ArrayList *list, object *base, object *new) {
 #ifdef DEBUG
 	assert(base != NULL && new != NULL);
 #endif
 	TAILQ_INSERT_BEFORE(base, new, entries);
 }
 
-void addAfter(object *base, object *new) {
+void addAfter(ArrayList *list, object *base, object *new) {
 #ifdef DEBUG
 	assert(base != NULL && new != NULL);
 #endif
-	TAILQ_INSERT_AFTER(&head, base, new, entries);
+	TAILQ_INSERT_AFTER(&(list->head), base, new, entries);
 }
 
-void rm(object *en) {
+void rm(ArrayList *list, object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
-	TAILQ_REMOVE(&head, en, entries);
+	TAILQ_REMOVE(&(list->head), obj, entries);
 }
 
-object *get(unsigned int i) {
-	foreach (np) {
-		if (np->id == i) {
-			return np;
+object *get(ArrayList *list, unsigned int i) {
+	foreach (list) {
+		if (list->obj->id == i) {
+			return list->obj;
 		}
 	}
 	return NULL;
 }
 
-object *getFirst(void) {
-	return TAILQ_FIRST(&head);
+object *getFirst(ArrayList *list) {
+	return TAILQ_FIRST(&(list->head));
 }
 
-object *getLast(void) {
-	return TAILQ_LAST(&head, tailhead);
+object *getLast(ArrayList *list) {
+	return TAILQ_LAST(&(list->head), thead);
 }
 
-object *getPrev(object *en) {
+object *getPrev(ArrayList *list, object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
 	object *prev;
-	prev =  TAILQ_PREV(en, tailhead, entries);
+	prev =  TAILQ_PREV(obj, thead, entries);
 	return prev;
 }
 
-object *getNext(object *en) {
+object *getNext(ArrayList *list, object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
 	object *next;
-	next = TAILQ_NEXT(en, entries);
+	next = TAILQ_NEXT(obj, entries);
 	return next;
 }
 
-void setPrev(object *base, object *en) {
+void setPrev(ArrayList *list, object *base, object *obj) {
 #ifdef DEBUG
-	assert(base != NULL && en != NULL);
+	assert(base != NULL && obj != NULL);
 #endif
-	object *prev = getPrev(base);
+	object *prev = getPrev(list, base);
 	if (prev != NULL) {
-		set(prev, en);
+		set(prev, obj);
 	}
 }
 
-void setNext(object *base, object *en) {
+void setNext(ArrayList *list, object *base, object *en) {
 #ifdef DEBUG
 	assert(base != NULL && en != NULL);
 #endif
-	object *next = getNext(base);
+	object *next = getNext(list, base);
 	if (next != NULL) {
 		set(next, en);
 	}
 }
 
-unsigned int getId(object *en) {
+unsigned int getId(object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
-	return en->id;
+	return obj->id;
 }
 
-size_t getSize(void) {
-	size_t size = 0;
-	foreach (np) {
+unsigned int getSize(ArrayList *list) {
+	unsigned int size = 0;
+	foreach (list) {
 		size++;
 	}
 	return size;
 }
 
-int isEmpty(void) {
-	return TAILQ_EMPTY(&head);
+int isEmpty(ArrayList *list) {
+	return TAILQ_EMPTY(&(list->head));
 }
 
 void swap(object *first, object *second) {
@@ -149,21 +149,21 @@ void swap(object *first, object *second) {
 	}
 }
 
-void swapNext(object *base) {
+void swapNext(ArrayList *list, object *base) {
 #ifdef DEBUG
 	assert(base != NULL);
 #endif
-	object *next = getNext(base);
+	object *next = getNext(list, base);
 	if (next != NULL) {
 		swap(base, next);
 	}
 }
 
-void swapPrev(object *base) {
+void swapPrev(ArrayList *list, object *base) {
 #ifdef DEBUG
 	assert(base != NULL);
 #endif
-	object *prev = getPrev(base);
+	object *prev = getPrev(list, base);
 	if (prev != NULL) {
 		swap(base, prev);
 	}

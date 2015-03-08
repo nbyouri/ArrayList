@@ -1,5 +1,5 @@
 CC=	gcc
-CFLAGS=	-Wall -DDEBUG
+CFLAGS=	-Wall -DDEBUG -ferror-limit=1000
 SRC=	examples.c list.c tools.c entry.c
 TARGET=	test-list
 

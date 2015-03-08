@@ -1,15 +1,20 @@
 #include <dirent.h>
+#include <assert.h>
 #include "list.h"
 #include "tools.h"
 
 #define PATH "/Users/youri/Downloads"
 
 int main(void) {
+	// list type test
+	ArrayList *list = NULL;
+	list = malloc(sizeof(*list));
+
+	initList(list);
+
 	DIR                 *dp;
 	struct dirent       *ep;
 
-	// initialize list
-	initList();
 	unsigned int i = 0;
 
 	// get a file listing from PATH
@@ -19,8 +24,8 @@ int main(void) {
 	} else {
 		while ((ep = readdir(dp)) != NULL) {
 			if ((ep->d_name[0] != '.')) {
-				np = new(i++, ep->d_name);
-				add(np);
+				list->obj = new(i++, ep->d_name);
+				add(list, list->obj);
 			}
 		}
 		if (closedir(dp) == -1) {
@@ -29,88 +34,36 @@ int main(void) {
 		}
 	}
 
-#if 0
-	// swap last - 1 and last - 2 elements
-	swapNext(get(9));
-	swapNext(get(9));
-	swapPrev(get(9));
-#endif
-	swap(get(29), get(2));
-	swapNext(get(9));
-
-#if 0
-	// replace next/prev entries
-	object e;
-	e.name = growArray(e.name, BUFSIZ, sizeof(char));
-	strlcpy(e.name, "youri", BUFSIZ);
-	e.id = 99;
-	setPrev(get(1), &e);
-	//setNext(get(50), &e);
-	//set(get(23), &e);
-
-
-	// insert before / after
-	object b, d;
-	b.name = growArray(b.name, BUFSIZ, sizeof(char));
-	d.name = growArray(d.name, BUFSIZ, sizeof(char));
-	d.id = 11;
-	b.id = 99;
-	strlcpy(b.name, "youri", BUFSIZ);
-	strlcpy(d.name, "kekek", BUFSIZ);
-	addBefore(getLast(), &b);
-	addAfter(getLast(), &d);
-#endif
-
-	// get first / last entry
-#if 0
-	toString(getFirst());
-	toString(getLast());
-#endif
-
-#if 0
-	// get an entry like an array
-	object *item = get(5);
-	toString(get(5));
-	printf("%s\n", "renaming entry 5 name to \"arst\"");
-	if (setName("arst", item) == -1) {
-		perror("Failed to set name\n");
-	} else {
-		toString(item))
-	}
-#endif
-
-
-	// convert linkedlist to array
-	char **array = NULL;
-	array = toArray(array);
-	unsigned int count = (unsigned int)getSize();
-	count--;
-	dumpArray(array, count);
-	cleanArray(array, &count);
-
-	// bubble sort items
-#if 0
-	sort(cmpId);
-	sort(cmpName);
-#endif
+	swap(get(list, 29), get(list, 2));
 
 	// print contents
-	foreach (np) {
-		toString(np);
+	foreach (list) {
+		toString(list->obj);
 	}
 
+	// create new list and add an item from other list
+	ArrayList *newlist;
+	newlist = malloc(sizeof(*list));
+	initList(newlist);
+
+	newlist->obj = getFirst(list);
+	add(newlist, newlist->obj);
+
+	foreach (newlist) {
+		toString(newlist->obj);
+	}
+
+	cleanList(newlist);
+
 	// free list items
-	cleanList();
+	cleanList(list);
 
 	// should be empty by now, still check
-	if (!isEmpty()) {
+	if (!isEmpty(list)) {
 		perror("ll not empty\n");
 	}
 
-	// free entry pointer
-	np = cleanArray((char **)np, NULL);
+	printf("list->head: %p\nnewlist->head: %p\n", list->head, newlist->head);
 
-	isClean();
-
-	return 0;
+	return isClean(list);
 }

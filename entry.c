@@ -58,7 +58,7 @@ int cmpId(const void *a, const void *b) {
 	return ((int)en2->id - (int)en1->id);
 }
 
-ssize_t setName(char *name, object *en) {
+void setName(char *name, object *en) {
 #ifdef DEBUG
 	assert(en != NULL && name != NULL);
 #endif
@@ -66,20 +66,24 @@ ssize_t setName(char *name, object *en) {
 #ifdef DEBUG
 	assert(en->name != NULL);
 #endif
-	return -1;
 }
 
-void isClean(void) {
-	foreach (np) {
-		assert(np != NULL);
-		assert(np->name != NULL);
+int isClean(ArrayList *list) {
+	foreach (list) {
+		if (list->obj != NULL) {
+			if (list->obj->name != NULL) {
+				printf("entry %u not freed\n", list->obj->id);
+				return -1;
+			}
+		}
 	}
+	return 0;
 }
 
-void *toArray() {
+void *toArray(ArrayList *list) {
 	char **array = NULL;
 	unsigned int i = 0;
-	size_t listSize = getSize();
+	size_t listSize = getSize(list);
 	if (listSize == 0) {
 		return NULL;
 	}
@@ -90,8 +94,8 @@ void *toArray() {
 		perror("array == NULL");
 		return NULL;
 	}
-	foreach (np) {
-		array[i] = strndup(np->name, BUFSIZ);
+	foreach (list) {
+		array[i] = strndup(list->obj->name, BUFSIZ);
 #ifdef DEBUG
 		assert(array[i] != NULL);
 #endif
@@ -100,17 +104,17 @@ void *toArray() {
 	return array;
 }
 
-void toString(object *en) {
-	printf("%02u -> %s\n", en->id, en->name);
+void toString(object *obj) {
+	printf("%02u -> %s\n", obj->id, obj->name);
 }
 
-void cleanList() {
-	foreach (np) {
-		np->name = cleanArray((char **)np->name, NULL);
+void cleanList(ArrayList *list) {
+	foreach (list) {
+		list->obj->name = cleanArray((char **)list->obj->name, NULL);
 #ifdef DEBUG
-		assert(np->name == NULL);
+		assert(list->obj->name == NULL);
 #endif
-		rm(np);
+		rm(list, list->obj);
 	}
 }
 
