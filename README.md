@@ -9,7 +9,7 @@
 		unsigned int	id;
 		char			nom[100];
 		char			sexe;
-		pointers(entry) entries;
+		pointers		entries;
 	}
 	```
 	
@@ -18,8 +18,9 @@
 	objets précédents et suivants dans la liste nécessaire pour ajouter, 
 	déplacer, supprimer, trier dans la listeet `id` qui permet d'indexer la liste et qui est nécessaire au bon fonctionnement des fonctions décrites après. 
 
+- voici un exemple d'utilisation simple: 
+
 	```c
-	ArrayList *list;
 		ArrayList *list;
 		/* alloue de la mémoire pour le pointeur list */
 		list = malloc(sizeof(*list));
@@ -49,35 +50,35 @@
 
 ## Fonctions
 
-fonction | description
----------:|:-----------
-*foreach*(np) {} | boucle while itèrant de la tête vers la queue
-*foreach_rev*(np) {} | boucle while itèrant de la queue vers la tête
+fonction             | description
+--------------------:|:-----------
+*initList*(ArrayList *) | initialise la liste en allouant de la mémoire pour la tête
+*foreach*(ArrayList *) {} | boucle while itèrant de la tête vers la queue
+*foreach_rev*(ArrayList *) {} | boucle while itèrant de la queue vers la tête
 *new*(unsigned int id, ...) | constructeur d'objet, doit être défini par l'utilisateur. `new()` 	alloue la mémoire nécessaire pour un objet.
 *set*(object *obj, object *new) | remplace l'objet `obj` avec un autre objet `new`.
-*add*(object *obj)` | ajouter un objet au bout de la liste.
-*addOnTop*(object *obj)` | ajoute un objet en haut de la liste.
-*addBefore*(object *obj, object *new)`| ajoute un objet avant un autre.
-*addAfter*(object *obj, object *new)` | ajoute un objet après un autre.
-*rm*(object *)| retire un objet de la liste.
-*get*(unsigned int) |	trouve un objet de la liste basé sur son index.
-*getFirst*() | récupère le premier objet de la liste.
-*getLast*()  |	récupère le dernier objet de la liste.
-*getPrev*(object *obj) |récupère l'élément précédent.
-*getNext*(object *obj) |récupère le prochain élément.
-*setPrev*(object *obj, object *new)  |remplace l'objet précédent à `obj` avec un nouvel objet `new`.
-*setNext*(object *obj, object *new) |remplace l'objet prochain à `obj` avec un nouvel objet `new`.
+*add*(ArrayList *, object *obj) | ajouter un objet au bout de la liste.
+*addOnTop*(ArrayList *, object *obj) | ajoute un objet en haut de la liste.
+*addBefore*(ArrayList *, object *obj, object *new)| ajoute un objet avant un autre.
+*addAfter*(ArrayList *, object *obj, object *new) | ajoute un objet après un autre.
+*rm*(ArrayList *, object *)| retire un objet de la liste.
+*get*(ArrayList *, unsigned int) |	trouve un objet de la liste basé sur son index.
+*getFirst*(ArrayList *) | récupère le premier objet de la liste.
+*getLast*(ArrayList *)  |	récupère le dernier objet de la liste.
+*getPrev*(ArrayList *, object *obj) |récupère l'élément précédent.
+*getNext*(ArrayList *, object *obj) |récupère le prochain élément.
+*setPrev*(ArrayList *, object *obj, object *new)  |remplace l'objet précédent à `obj` avec un nouvel objet `new`.
+*setNext*(ArrayList *, object *obj, object *new) |remplace l'objet prochain à `obj` avec un nouvel objet `new`.
 *getId*(object *obj)    |retourne l'id de l'objet `obj`
 *getSize*() |retourne le nombre d'objets dans la liste
 *swap*(object *first, object *second)  |échange l'objet `first` avec l'objet `second`
-*swapPrev*(object *obj)  |échange l'objet `obj` avec son précédent.
-*swapNext*(object *obj)  |échange l'objet `obj` avec son prochain.
-*isEmpty*() |retourne 1 si la liste est vide.
-*isClean*()   |itère dans la liste pour vérifier que les éléments soient des pointeurs NULL.
-*cleanList*()   |vide la liste et nettoie les pointeurs.
-*toArray*(char **)|    convertit un champs de l'objet en un tableau à partir des objets de la liste.
-*toString*() | affiche l'objet à l'écran de manière lisible pour l'utilisateur.
-*sort*() | prend en paramètre une fonction de com paraison d'objets, celle ci doit être définie comme suit: `int cmp(const void *, const void *);`
+*swapPrev*(ArrayList *, object *obj)  |échange l'objet `obj` avec son précédent.
+*swapNext*(ArrayList *, object *obj)  |échange l'objet `obj` avec son prochain.
+*isEmpty*(ArrayList *) |retourne 1 si la liste est vide.
+*cleanList*(ArrayList *)   |vide la liste et nettoie les pointeurs.
+*toArray*(ArrayList *)|    convertit un champs de l'objet en un tableau à partir des objets de la liste.
+*toString*(object *) | affiche l'objet à l'écran de manière lisible pour l'utilisateur.
+*sort*(ArrayList *, int(\*)(const void *, const void *)) | prend en paramètre une fonction de comparaison d'objets.
 	
 ### / ! \ Fonctions à modifier dans `entry.c` / ! \
 
