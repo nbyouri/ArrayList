@@ -32,25 +32,6 @@ int growArray(void *ptr, size_t num, size_t size) {
 	return result;
 }
 
-/*
- * clean array of strings
- * can be used with char * as well,
- * just cast it. ex. cleanPtr((char **)str, NULL)
- */
-void *cleanArray(char **ptr, unsigned int *count) {
-	if ((count != NULL) && (*count > 0)) {
-		unsigned int i;
-		for (i = 0; i < *count; i++) {
-			free(ptr[i]);
-			ptr[i] = NULL;
-		}
-		*count = 0;
-	}
-	free(ptr);
-	ptr = NULL;
-	return ptr;
-}
-
 /* dumps the content of a string array with given size
  * should work with char * with casting to char ** and
  * setting the size to 0.

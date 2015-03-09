@@ -13,7 +13,9 @@
  */
 object *new(unsigned int id, char *name) {
 	object *en = NULL;
-	if (growArray(&en, 1, sizeof(*en)) != 0) {
+	//if (growArray(&en, 1, sizeof(*en)) != 0) {
+	en = malloc(sizeof(object));
+	if (en == NULL) {
 		perror("failed to grow array");
 	}
 	en->id = id;
@@ -24,21 +26,21 @@ object *new(unsigned int id, char *name) {
 	return en;
 }
 
-object *set(object *base, object *en) {
+object *set(object *base, object *obj) {
 #ifdef DEBUG
-	assert(en != NULL);
+	assert(obj != NULL);
 #endif
 
 	if (base == NULL) {
 		base = new(0, "(null)");
 	}
 
-	base->name = strndup(en->name, BUFSIZ);
+	base->name = strndup(obj->name, BUFSIZ);
 #ifdef DEBUG
 	assert(base->name != NULL);
 #endif
 
-	base->id = en->id;
+	base->id = obj->id;
 	return base;
 }
 
@@ -105,10 +107,8 @@ void toString(object *obj) {
 
 void cleanList(ArrayList *list) {
 	foreach (list) {
-		list->obj->name = cleanArray((char **)list->obj->name, NULL);
-#ifdef DEBUG
-		assert(list->obj->name == NULL);
-#endif
+		free(list->obj->name);
+		list->obj->name = NULL;
 		rm(list, list->obj);
 	}
 	free(list->head);

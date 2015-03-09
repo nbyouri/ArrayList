@@ -5,20 +5,23 @@
 /* pointers is a tailq entry */
 #define pointers	TAILQ_ENTRY(entry)
 
+/* list head */
+TAILQ_HEAD(list_head, entry);
+
 /* user defined entry structure */
 #include "entry.h"
 
 /* initialize the list */
-#define initList(x)	do {			\
-	x->head = malloc(sizeof(struct thead));	\
-	TAILQ_INIT(x->head);			\
+#define initList(x)	do {				\
+	x->head = malloc(sizeof(struct list_head));	\
+	TAILQ_INIT(x->head);				\
 } while (0)
 
 /* Traverse the tail queue in forward direction */
 #define foreach(x)	TAILQ_FOREACH(x->obj, x->head, entries)
 
 /* Traverse the tail queue in forward direction */
-#define foreach_rev(x)	TAILQ_FOREACH_REVERSE(x->obj, x->head, thead, entries)
+#define foreach_rev(x)	TAILQ_FOREACH_REVERSE(x->obj, x->head, list_head, entries)
 
 void toString(object *);
 void add(ArrayList *, object *);

@@ -57,6 +57,7 @@ void rm(ArrayList *list, object *obj) {
 #ifdef DEBUG
 	assert(obj != NULL);
 #endif
+	printf("head name : %s\n", list->head->head_name);
 	TAILQ_REMOVE(list->head, obj, entries);
 }
 
@@ -74,7 +75,7 @@ object *getFirst(ArrayList *list) {
 }
 
 object *getLast(ArrayList *list) {
-	return TAILQ_LAST(list->head, thead);
+	return TAILQ_LAST(list->head, list_head);
 }
 
 object *getPrev(ArrayList *list, object *obj) {
@@ -82,7 +83,7 @@ object *getPrev(ArrayList *list, object *obj) {
 	assert(obj != NULL);
 #endif
 	object *prev;
-	prev =  TAILQ_PREV(obj, thead, entries);
+	prev =  TAILQ_PREV(obj, list_head, entries);
 	return prev;
 }
 
@@ -145,7 +146,8 @@ void swap(object *first, object *second) {
 		first = set(first, second);
 		second = set(second, temp);
 
-		temp = cleanArray((char **)temp, NULL);
+		free(temp);
+		temp = NULL;
 	}
 }
 
