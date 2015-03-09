@@ -1,14 +1,20 @@
 CC=	gcc
-CFLAGS=	-Wall -DDEBUG -ferror-limit=1000 -DQUEUE_MACRO_DEBUG
-SRC=	examples.c list.c tools.c entry.c
-TARGET=	test-list
+PREFIX=	/usr/pkg
+CFLAGS=	-Wall -DDEBUG -dynamiclib
+SRC=	list.c tools.c entry.c
+TARGET= libList.dylib
+SHARED_LIB=	-install_name ${PREFIX}/lib/${TARGET}
+
 
 all:
-	${CC} ${CFLAGS} ${SRC} -o ${TARGET}
+	${CC} ${CFLAGS} ${SRC} ${SHARED_LIB} -o ${TARGET}
 
-test: all
-	
-	./${TARGET}
+install:
+	test -d ${DESTDIR}${PREFIX}/lib || mkdir -p ${DESTDIR}${PREFIX}/lib
+	install -pm 755  ${TARGET} ${DESTDIR}${PREFIX}/lib/${TARGET}
 
-debug:
-	lldb ${TARGET}
+deinstall:
+	rm ${DESTDIR}${PREFIX}/lib/${TARGET}
+
+clean:
+	rm ${TARGET}
