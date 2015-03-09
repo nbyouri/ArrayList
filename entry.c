@@ -13,7 +13,6 @@
  */
 object *new(unsigned int id, char *name) {
 	object *en = NULL;
-	//if (growArray(&en, 1, sizeof(*en)) != 0) {
 	en = malloc(sizeof(object));
 	if (en == NULL) {
 		perror("failed to grow array");
@@ -106,12 +105,11 @@ void toString(object *obj) {
 }
 
 void cleanList(ArrayList *list) {
-	foreach (list) {
+	while (!isEmpty(list)) {
+		list->obj = TAILQ_FIRST(list->head);
 		free(list->obj->name);
 		list->obj->name = NULL;
-		rm(list, list->obj);
+		TAILQ_REMOVE(list->head, list->obj, entries);
 	}
-	free(list->head);
-	list->head = NULL;
 }
 

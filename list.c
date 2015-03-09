@@ -57,7 +57,6 @@ void rm(ArrayList *list, object *obj) {
 #ifdef DEBUG
 	assert(obj != NULL);
 #endif
-	printf("head name : %s\n", list->head->head_name);
 	TAILQ_REMOVE(list->head, obj, entries);
 }
 

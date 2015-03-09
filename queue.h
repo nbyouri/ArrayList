@@ -536,7 +536,6 @@ __MISMATCH_TAGS_POP
 #define	TAILQ_HEAD(name, type)						\
 __MISMATCH_TAGS_PUSH							\
 struct name {								\
-	char	*head_name;	/* XXX DEBUG */				\
 	struct type *tqh_first;	/* first element */			\
 	struct type **tqh_last;	/* addr of last next element */		\
 	TRACEBUF							\
