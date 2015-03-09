@@ -105,11 +105,15 @@ void toString(object *obj) {
 }
 
 void cleanList(ArrayList *list) {
+	/* remove elements */
 	while (!isEmpty(list)) {
 		list->obj = TAILQ_FIRST(list->head);
 		free(list->obj->name);
 		list->obj->name = NULL;
 		TAILQ_REMOVE(list->head, list->obj, entries);
 	}
+	/* free token element */
+	free(list->obj);
+	list->obj = NULL;
 }
 
