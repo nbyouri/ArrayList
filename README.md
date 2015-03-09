@@ -10,14 +10,27 @@
 		char			nom[100];
 		char			sexe;
 		pointers		entries;
-	}
+	};
+	
+	typedef	struct entry object;
+
 	```
+- La structure d'une liste est définie comme ceci:
+
+	```c
+	typedef struct {
+		struct list_head *head;
+		object *obj;
+	} ArrayList;
+	```
+	
+	Elle Contient la tête de la liste, contenant des pointeurs vers le premier et le dernier élément de la liste et un objet réutilisable pour itérer ou ajouter dans la liste.
 	
 - Vous pouvez ajouter autant de champs que vous voulez pour autant que
 	vous laissiez le champs `entries` qui contient des pointeurs vers les 
 	objets précédents et suivants dans la liste nécessaire pour ajouter, 
 	déplacer, supprimer, trier dans la liste.     
-	`id` permet d'indexer la liste.
+	`id` qui permet d'indexer la liste et qui est nécessaire au bon fonctionnement des fonctions décrites après. 
 
 - voici un exemple d'utilisation simple: 
 
