@@ -5,5 +5,5 @@
 	"description" : "Java ArrayList like in C using BSD TAILQ",
 	"keywords" : ["list", "tail", "queue", "linked-list", "linked", "ArrayList"],
 	"license" : "MIT",
-	"src" : ["list.h", "list.c", "entry.h", "entry.c", "tools.h", "tools.c"]
+	"src" : ["queue.h", "list.h", "list.c", "entry.h", "entry.c", "tools.h", "tools.c"]
 }
