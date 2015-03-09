@@ -16,7 +16,8 @@
 - Vous pouvez ajouter autant de champs que vous voulez pour autant que
 	vous laissiez le champs `entries` qui contient des pointeurs vers les 
 	objets précédents et suivants dans la liste nécessaire pour ajouter, 
-	déplacer, supprimer, trier dans la listeet `id` qui permet d'indexer la liste et qui est nécessaire au bon fonctionnement des fonctions décrites après. 
+	déplacer, supprimer, trier dans la liste.     
+	`id` permet d'indexer la liste.
 
 - voici un exemple d'utilisation simple: 
 
