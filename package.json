@@ -1,0 +1,9 @@
+{
+	"name" : "ArrayList",
+	"version" : "0.1",
+	"repo" : "yrmt/ArrayList",
+	"description" : "Java ArrayList like in C using BSD TAILQ",
+	"keywords" : ["list", "tail", "queue", "linked-list", "linked", "ArrayList"],
+	"license" : "MIT",
+	"install" : "make install"
+}
