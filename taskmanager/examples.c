@@ -256,8 +256,8 @@ int get_memory_usage (uint64_t *memory_total, uint64_t *memory_free,
 	struct uvmexp uvmexp;
 #elif __NetBSD__
         int mib[] = {CTL_VM, VM_METER};
-#endif
         struct vmtotal vmtotal;
+#endif
 
 #ifndef __DragonFly__
         struct swapent *swdev;
