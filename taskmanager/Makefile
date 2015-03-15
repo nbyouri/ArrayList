@@ -1,4 +1,4 @@
-CC=	clang -std=c99 -pedantic -Wall -lkvm -g
+CC=	cc -std=c99 -pedantic -Wall -lkvm 
 PREFIX=	/usr/pkg
 SRC=	list.c tools.c entry.c examples.c
 TARGET= test_list

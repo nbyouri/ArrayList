@@ -1,15 +1,12 @@
 CC=	gcc
 PREFIX=	/usr/pkg
-CFLAGS=	-Wall -DDEBUG -dynamiclib
-SRC=	list.c tools.c entry.c
-TARGET= libList.dylib
+CFLAGS=	-Wall -DDEBUG 
+SRC=	list.c tools.c entry.c test.c
 EXSRC=	examples.c
-EXTARGET=	test
-LDFLAGS= -L${PREFIX}/lib -lList
-SHARED_LIB=	-install_name ${PREFIX}/lib/${TARGET}
+TARGET=	test
 
 all:
-	${CC} ${CFLAGS} ${SRC} ${SHARED_LIB} -o ${TARGET}
+	${CC} ${CFLAGS} ${SRC}  -o ${TARGET}
 
 install:
 	test -d ${DESTDIR}${PREFIX}/lib || mkdir -p ${DESTDIR}${PREFIX}/lib

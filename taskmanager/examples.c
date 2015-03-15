@@ -28,7 +28,11 @@ int sortPid(const void *a, const void *b) {
 }
 
 void get_task_list(ArrayList * list) {
+#ifdef __OpenBSD__
+	struct kinfo_proc *kp = NULL;
+#else
         struct kinfo_proc2 *kp = NULL;
+#endif
 
         struct passwd *passwdp;
         char **args = NULL;
@@ -47,36 +51,22 @@ void get_task_list(ArrayList * list) {
 
         /* fill kinfo_proc2 structure */
         /* XXX does it return sleeping processes ? */
+#ifdef __OpenBSD__
+	if (!(kp = kvm_getprocs(kdp, KERN_PROC_ALL, 0,
+	        	sizeof(struct kinfo_proc), &nproc)))
+#else
         if (!(kp = kvm_getproc2(kdp, KERN_PROC_ALL, 0,
                     sizeof(struct kinfo_proc2), &nproc)))
+#endif
                 err(1, "%s", kvm_geterr(kdp));
 
-        /* example with using sysctl directly */
-#if 0
-        int mib[6] = { CTL_KERN, KERN_PROC2, KERN_PROC_ALL, 0 /* all users */,
-                sizeof(struct kinfo_proc2), 0 };
-
-        if (sysctl(mib, 6, kp, &size, NULL, 0) < 0)
-                errx(1, "failed to get kern.proc2");
-
-        printf("size = %zu\n", size);
-
-        nproc = (int)(size / sizeof(*kp));
-
-        mib[5] = nproc;
-
-        kp = malloc(nproc * sizeof(struct kinfo_proc2));
-        if (kp == NULL)
-                errx(1, "failed to malloc");
-
-        if (sysctl(mib, 6, kp, &size, NULL, 0) < 0)
-                errx(1, "failed to get kern.proc2");
-
-        printf("nproc = %d\n", nproc);
-#endif
         for (i = 0; i < nproc; i++) {
                 /* get per-process information in our entry */
+#ifdef __OpenBSD__
+		struct kinfo_proc p = kp[i];
+#else 
                 struct kinfo_proc2 p = kp[i];
+#endif
 
                 list->obj = new(i);
 
@@ -90,12 +80,16 @@ void get_task_list(ArrayList * list) {
                 snprintf(list->obj->state, sizeof(list->obj->state), "%s",
                     state_abbrev[p.p_stat]);
                 strlcpy(list->obj->name, p.p_comm, strlen(p.p_comm) + 1);
-                //if (!P_ZOMBIE(&p)) { /* XXX much less relax than OpenBSD's */
-                if (!(p.p_stat == SDEAD)) {
+                if (!P_ZOMBIE(&p)) { /* XXX much less relax than OpenBSD's */
+                //if (!(p.p_stat == SDEAD)) {
                         /* get process args */
                         /* example with kvm functions */
 
+#ifdef __OpenBSD__
+			args = kvm_getargv(kdp, &kp[i], BUFSIZ);
+#else
                         args = kvm_getargv2(kdp, &kp[i], BUFSIZ);
+#endif
                         /* example with sysctl directly */
                         /*
                         mib[0] = CTL_KERN;
@@ -145,10 +139,18 @@ void get_task_list(ArrayList * list) {
 
 int sleeping(unsigned int pid) {
         int mib[6];
-        struct kinfo_proc2 kp;
+#ifdef __OpenBSD__
+        struct kinfo_proc kp;
+#else	
+	struct kinfo_proc2 kp;
+#endif
         size_t size = sizeof(kp);
         mib[0] = CTL_KERN;
-        mib[1] = KERN_PROC2;
+#ifdef __OpenBSD__
+        mib[1] = KERN_PROC;
+#else
+	mib[1] = KERN_PROC2;
+#endif
         mib[2] = KERN_PROC_PID;
         mib[3] = pid;
         mib[4] = size;
@@ -165,7 +167,11 @@ int get_cpu_usage(short *cpu_count, float *cpu_user, float *cpu_system) {
         static long cur_user = 0, cur_system = 0, cur_total = 0;
         static long old_user = 0, old_system = 0, old_total = 0;
 
-        int mib[] = { CTL_KERN, KERN_CP_TIME };
+#ifdef __OpenBSD__
+        int mib[] = { CTL_KERN, KERN_CPTIME };
+#else
+	int mib[] = { CTL_KERN, KERN_CP_TIME };
+#endif
         long cp_time[CPUSTATES];
         size_t size = sizeof(cp_time);
 
@@ -309,11 +315,12 @@ int main(void) {
         uint64_t memory_total, memory_free, memory_cache, memory_buffers, swap_total, swap_free;
         get_memory_usage(&memory_total, &memory_free, &memory_cache,
             &memory_buffers, &swap_total, &swap_free);
-        printf("memory_total = %lu, memory_free = %lu, memory_cache = %lu\n"
-            "memory_buffers = %lu, swap_total = %lu, swap_free = %lu\n",
+        printf("memory_total = %llu, memory_free = %llu, memory_cache = %llu\n"
+            "memory_buffers = %llu, swap_total = %llu, swap_free = %llu\n",
             memory_total, memory_free, memory_cache,
             memory_buffers, swap_total, swap_free);
 
+	puts("finished...");
         return 0;
 
 }
