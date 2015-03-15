@@ -32,7 +32,6 @@ extern int errno;
 
 #ifdef __DragonFly__
 #define SDEAD	208
-#define kinfo_proc2	kinfo_proc
 #endif
 
 char    *state_abbrev[] = {
@@ -44,10 +43,10 @@ int sortPid(const void *a, const void *b) {
 }
 
 void get_task_list(ArrayList * list) {
-#ifdef __OpenBSD__
-	struct kinfo_proc *kp = NULL;
+#ifdef __NetBSD__
+	struct kinfo_proc2 *kp = NULL;
 #else
-        struct kinfo_proc2 *kp = NULL;
+        struct kinfo_proc *kp = NULL;
 #endif
 
         struct passwd *passwdp;
@@ -87,10 +86,10 @@ void get_task_list(ArrayList * list) {
 #endif
 
                 /* get per-process information in our entry */
-#ifdef __OpenBSD__
-		struct kinfo_proc p = kp[i];
+#ifdef __NetBSD__
+		struct kinfo_proc2 p = kp[i];
 #else
-                struct kinfo_proc2 p = kp[i];
+                struct kinfo_proc p = kp[i];
 #endif
 
                 list->obj = new(i);
@@ -159,7 +158,11 @@ void get_task_list(ArrayList * list) {
 
 bool sleeping(unsigned int pid) {
 	kvm_t	*kd;
-	struct kinfo_proc2 *kp;
+#ifdef __NetBSD__
+        struct kinfo_proc2 *kp = NULL;
+#else
+	struct kinfo_proc *kp = NULL;
+#endif
 	int cnt;
 	int ret;
 
@@ -171,7 +174,7 @@ bool sleeping(unsigned int pid) {
         kp = kvm_getprocs(kd, KERN_PROC_PID, pid, 0, &cnt);
 #elif __DragonFly__
 	kp = kvm_getprocs(kd, KERN_PROC_PID, pid, &cnt);
-#else
+#else /* probably NetBSD */
 	kp = kvm_getproc2(kd, KERN_PROC_PID, pid,
             sizeof(struct kinfo_proc2), &cnt);
 #endif
