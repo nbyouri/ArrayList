@@ -53,7 +53,7 @@ void get_task_list(ArrayList * list) {
         /* XXX does it return sleeping processes ? */
 #ifdef __OpenBSD__
 	if (!(kp = kvm_getprocs(kdp, KERN_PROC_ALL, 0,
-	        	sizeof(struct kinfo_proc), &nproc)))
+	            sizeof(struct kinfo_proc), &nproc)))
 #else
         if (!(kp = kvm_getproc2(kdp, KERN_PROC_ALL, 0,
                     sizeof(struct kinfo_proc2), &nproc)))
@@ -64,7 +64,7 @@ void get_task_list(ArrayList * list) {
                 /* get per-process information in our entry */
 #ifdef __OpenBSD__
 		struct kinfo_proc p = kp[i];
-#else 
+#else
                 struct kinfo_proc2 p = kp[i];
 #endif
 
@@ -80,8 +80,11 @@ void get_task_list(ArrayList * list) {
                 snprintf(list->obj->state, sizeof(list->obj->state), "%s",
                     state_abbrev[p.p_stat]);
                 strlcpy(list->obj->name, p.p_comm, strlen(p.p_comm) + 1);
+#ifdef __OpenBSD__
                 if (!P_ZOMBIE(&p)) { /* XXX much less relax than OpenBSD's */
-                //if (!(p.p_stat == SDEAD)) {
+#else
+                if (!(p.p_stat == SDEAD)) {
+#endif
                         /* get process args */
                         /* example with kvm functions */
 
@@ -141,7 +144,7 @@ int sleeping(unsigned int pid) {
         int mib[6];
 #ifdef __OpenBSD__
         struct kinfo_proc kp;
-#else	
+#else
 	struct kinfo_proc2 kp;
 #endif
         size_t size = sizeof(kp);
