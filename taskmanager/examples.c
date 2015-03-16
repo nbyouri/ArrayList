@@ -257,8 +257,8 @@ int get_memory_usage (uint64_t *memory_total, uint64_t *memory_free,
 #else
 #if __NetBSD__
         int mib[] = {CTL_VM, VM_METER};
-        struct vmtotal vmtotal;
 #endif
+        struct vmtotal vmtotal;
 #endif
 
 #ifndef __DragonFly__
