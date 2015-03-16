@@ -259,6 +259,7 @@ int get_memory_usage (uint64_t *memory_total, uint64_t *memory_free,
         int mib[] = {CTL_VM, VM_METER};
         struct vmtotal vmtotal;
 #endif
+#endif
 
 #ifndef __DragonFly__
         struct swapent *swdev;
