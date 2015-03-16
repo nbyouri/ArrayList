@@ -14,7 +14,7 @@
 #include <sys/sysctl.h>
 #include <unistd.h>
 #include <kvm.h>
-#ifdef __NetBSD__
+#ifndef __DragonFly__
 #include <sys/proc.h>
 #else
 #include <sys/user.h>
@@ -256,8 +256,8 @@ int get_memory_usage (uint64_t *memory_total, uint64_t *memory_free,
 	struct uvmexp uvmexp;
 #elif __NetBSD__
         int mib[] = {CTL_VM, VM_METER};
-#endif
         struct vmtotal vmtotal;
+#endif
 
 #ifndef __DragonFly__
         struct swapent *swdev;
@@ -270,8 +270,8 @@ int get_memory_usage (uint64_t *memory_total, uint64_t *memory_free,
 	if (sysctl(mib, 2, &uvmexp, &size, NULL, 0) < 0)
 		errx(1,"failed to get vm.uvmexp");
 	/* cheat : rm = tot used, add free to get total */
-	*memory_free = pagetok((guint64)uvmexp.free);
-	*memory_total = pagetok((guint64)uvmexp.npages);
+	*memory_free = pagetok((uint64_t)uvmexp.free);
+	*memory_total = pagetok((uint64_t)uvmexp.npages);
 	*memory_cache = 0;
 	*memory_buffers = 0; /*pagetok(uvmexp.npages - uvmexp.free - uvmexp.active);*/
 #else
@@ -383,11 +383,11 @@ int main(void) {
 	float cpu_user = 0;
 	float cpu_system = 0;
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 10; i++) {
 		get_cpu_usage(&cpu_count, &cpu_user, &cpu_system);
 		printf("cpu_count = %d, cpu_user = %f, cpu_system = %f\n\n", cpu_count,
 		    cpu_user, cpu_system);
-		sleep(3);
+		sleep(2);
 	}
 
 
