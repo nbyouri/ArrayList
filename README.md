@@ -133,6 +133,11 @@ Compilez l'exemple avec
 - List est une implémentation haut niveau des listes chaînées en C.
 - Elle utiliser les TAILQ de BSD  (voir queue.h)
 
+## Notes
+
+- En programmation concurrente, le programmeur doit assurer l'exclusion mutuelle
+  écriture/lecture et éviter les écritures multiples.
+
 ## Auteur & License
 
 Youri Mouton, 5 Mars 2015 sous la license MIT.
